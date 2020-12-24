@@ -46,7 +46,7 @@ def get_description(section):
 
 def print_generic_command(description):
     print(
-        "./randomame.py --description=\"" + description + "\" --all --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame64")
+        "./randomame.py --description=\"" + description + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame64")
 
 
 def print_softlist_command(softlist_name, description):
