@@ -17,6 +17,7 @@ def get_section(page, section):
     d = c[0]
     return d
 
+
 def get_description(section):
     e = section.replace(']\n', '], ').replace(',\n', ', ').replace('\n', '').replace(',,', ',').replace('  ',
                                                                                                         ' ').replace(
@@ -48,6 +49,11 @@ def print_generic_command(description):
         "./ randomame.py --description=\"" + description + "\" --all --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame64")
 
 
+def print_softlist_command(softlist_name, description):
+    print(
+        "./ randomame.py --selected_softlist=" + softlist_name + " --description=\"" + description + "\" --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame64")
+
+
 generic_section = ["\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
                    "\nMachines promoted to working\n----------------------------\n",
                    "\nClones promoted to working\n--------------------------\n"]
@@ -59,3 +65,22 @@ for section in generic_section:
     section_description = get_description(section_page)
     print(section)
     print_generic_command(section_description)
+
+softlist_section = ["\nNew working software list additions\n-----------------------------------",
+                    "\nSoftware list items promoted to working\n---------------------------------------"]
+
+for section in softlist_section:
+    print(section)
+
+    section_page = get_section(page, section)
+    s = re.split("(\n[a-z])", section_page)
+    softlist_section = []
+    for i in range(1, len(s), 2):
+        softlist_section.append(s[i].replace('\n', '') + s[i + 1])
+
+    for s in softlist_section:
+        softlist = re.split("(^.*: |^.*:\n)", s)
+        softlist_name = softlist[1].replace(': ', '').replace(':\n','')
+        softlist_description = get_description(softlist[2])
+        print(softlist_name)
+        print_softlist_command(softlist_name, softlist_description)
