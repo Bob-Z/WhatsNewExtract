@@ -3,6 +3,7 @@
 import re
 import sys
 import urllib.request
+import unicodedata
 
 
 def get_whats_new_page(version):
@@ -27,11 +28,11 @@ def get_description(section):
     d = re.sub(' \[[^\]]+\]', '', e)
 
     # remove last ', '
-    c = desc_list = d[:-2]
+    #c = desc_list = d[:-2]
 
     # split with ", " ignoring ',' placed in parenthesis
     # ( re.sub(r', (?!(?:[^(]*\([^)]*\))*[^()]*\))', ':::', d))
-    desc_list = re.split(r', (?!(?:[^(]*\([^)]*\))*[^()]*\))', c)
+    desc_list = re.split(r', (?!(?:[^(]*\([^)]*\))*[^()]*\))', d)
 
     escaped_list = []
     for d in desc_list:
@@ -51,14 +52,15 @@ def print_generic_command(description):
 
 def print_softlist_command(softlist_name, description):
     print(
-        "./randomame.py --selected_softlist=" + softlist_name + " --description=\"" + description + "\" --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame64")
+        "./randomame.py --selected_softlist=" + softlist_name + " --description=\"" + description + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame64")
 
 
 generic_section = ["\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
                    "\nMachines promoted to working\n----------------------------\n",
                    "\nClones promoted to working\n--------------------------\n"]
 
-page = get_whats_new_page(sys.argv[1]).decode("utf-8")
+p = get_whats_new_page(sys.argv[1]).decode("utf-8")
+page = unicodedata.normalize("NFKD", p)
 
 for section in generic_section:
     section_page = get_section(page, section)
