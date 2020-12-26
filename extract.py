@@ -21,7 +21,7 @@ def get_section(page, section):
 
 def get_description(section):
     e = section.replace(']\n', '], ').replace(',\n', ', ').replace('\n', '').replace(',,', ',').replace('  ',
-                                                                                                        ' ').replace(
+                                                                                                        '').replace(
         '   ', ' ')
 
     # remove [redump.org]
@@ -52,7 +52,7 @@ def print_generic_command(description):
 
 def print_softlist_command(softlist_name, description):
     print(
-        "./randomame.py --selected_softlist=" + softlist_name + " --description=\"" + description + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame64")
+        "./randomame.py --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + description + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame64")
 
 
 generic_section = ["\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
@@ -81,8 +81,8 @@ for section in softlist_section:
         softlist_section.append(s[i].replace('\n', '') + s[i + 1])
 
     for s in softlist_section:
-        softlist = re.split("(^.*: |^.*:\n)", s)
+        softlist = re.split("(^.*?: |^.*:\n)", s)
         softlist_name = softlist[1].replace(': ', '').replace(':\n','')
         softlist_description = get_description(softlist[2])
-        print(softlist_name)
+        print("\n" + softlist_name)
         print_softlist_command(softlist_name, softlist_description)
