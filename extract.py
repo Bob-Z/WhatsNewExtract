@@ -47,12 +47,12 @@ def get_description(section):
 
 def print_generic_command(description):
     print(
-        "./randomame.py --description=\"" + description + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame64")
+        "./randomame.py --description=\"" + description + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame")
 
 
 def print_softlist_command(softlist_name, description):
     print(
-        "./randomame.py --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + description + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame64")
+        "./randomame.py --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + description + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame")
 
 
 generic_section = ["\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
