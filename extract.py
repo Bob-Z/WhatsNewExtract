@@ -25,7 +25,8 @@ def get_description(section):
         '   ', ' ')
 
     # remove [redump.org]
-    d = re.sub(' \[[^\]]+\]', '', e)
+    dd = re.sub(' \[[^\]]+\]', '', e)
+    d = re.sub('\[[^\]]+\]', '', dd)
 
     # remove last ', '
     #c = desc_list = d[:-2]
