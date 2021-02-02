@@ -2,8 +2,8 @@
 
 import re
 import sys
-import urllib.request
 import unicodedata
+import urllib.request
 
 
 def get_whats_new_page(version):
@@ -29,7 +29,7 @@ def get_description(section):
     d = re.sub('\[[^\]]+\]', '', dd)
 
     # remove last ', '
-    #c = desc_list = d[:-2]
+    # c = desc_list = d[:-2]
 
     # split with ", " ignoring ',' placed in parenthesis
     # ( re.sub(r', (?!(?:[^(]*\([^)]*\))*[^()]*\))', ':::', d))
@@ -43,6 +43,7 @@ def get_description(section):
         e = regex_escaped.replace('!', '\!')
         escaped_list.append(e.replace('"', '\\\"'))
 
+    print("Found", str(len(desc_list)), "entry")
     return ":::".join(escaped_list)
 
 
@@ -54,6 +55,12 @@ def print_generic_command(description):
 def print_softlist_command(softlist_name, description):
     print(
         "./randomame.py --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + description + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame")
+
+
+def print_music(description):
+    for d in description.split(":::"):
+        print(
+            "./randomame.py --music --allow_not_supported --description=\"" + d + "\" --timeout=120 --window=1 --linear --quit --start_command=\"xdotool key ctrl+shift+alt+r\" --end_command=\"xdotool key ctrl+shift+alt+r\" /media/4To/emu/mame/mame/mame\n")
 
 
 generic_section = ["\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
@@ -83,7 +90,12 @@ for section in softlist_section:
 
     for s in softlist_section:
         softlist = re.split("(^.*?: |^.*:\n)", s)
-        softlist_name = softlist[1].replace(': ', '').replace(':\n','')
-        softlist_description = get_description(softlist[2])
+        softlist_name = softlist[1].replace(': ', '').replace(':\n', '')
         print("\n" + softlist_name)
-        print_softlist_command(softlist_name, softlist_description)
+
+        softlist_description = get_description(softlist[2])
+
+        if softlist_name == "vgmplay":
+            print_music(softlist_description)
+        else:
+            print_softlist_command(softlist_name, softlist_description)
