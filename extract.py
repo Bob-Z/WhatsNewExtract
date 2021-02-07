@@ -13,6 +13,8 @@ def get_whats_new_page(version):
 
 def get_section(page, section):
     a = page.split(section)
+    if len(a) == 1:
+        return None
     b = a[1]
     c = b.split("\n\n")
     d = c[0]
@@ -77,9 +79,10 @@ page = unicodedata.normalize("NFKD", p)
 
 for section in generic_section:
     section_page = get_section(page, section)
-    escaped_list, desc_list = get_description(section_page)
-    print(section)
-    print_generic_command(escaped_list)
+    if section_page is not None:
+        escaped_list, desc_list = get_description(section_page)
+        print(section)
+        print_generic_command(escaped_list)
 
 softlist_section = ["\nNew working software list additions\n-----------------------------------",
                     "\nSoftware list items promoted to working\n---------------------------------------"]
@@ -88,19 +91,20 @@ for section in softlist_section:
     print(section)
 
     section_page = get_section(page, section)
-    s = re.split("(\n[a-z])", section_page)
-    softlist_section = []
-    for i in range(1, len(s), 2):
-        softlist_section.append(s[i].replace('\n', '') + s[i + 1])
+    if section_page is not None:
+        s = re.split("(\n[a-z])", section_page)
+        softlist_section = []
+        for i in range(1, len(s), 2):
+            softlist_section.append(s[i].replace('\n', '') + s[i + 1])
 
-    for s in softlist_section:
-        softlist = re.split("(^.*?: |^.*:\n)", s)
-        softlist_name = softlist[1].replace(': ', '').replace(':\n', '')
-        print("\n" + softlist_name)
+        for s in softlist_section:
+            softlist = re.split("(^.*?: |^.*:\n)", s)
+            softlist_name = softlist[1].replace(': ', '').replace(':\n', '')
+            print("\n" + softlist_name)
 
-        escaped_list, desc_list = get_description(softlist[2])
+            escaped_list, desc_list = get_description(softlist[2])
 
-        if softlist_name == "vgmplay":
-            print_music(escaped_list, desc_list)
-        else:
-            print_softlist_command(escaped_list)
+            if softlist_name == "vgmplay":
+                print_music(escaped_list, desc_list)
+            else:
+                print_softlist_command(escaped_list)
