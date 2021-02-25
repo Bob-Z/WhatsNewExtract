@@ -22,12 +22,14 @@ def get_section(page, section):
 
 
 def get_description(section):
-    e = section.replace(']\n', '], ').replace(',\n', ', ').replace('\n', '').replace(',,', ',').replace('  ',
-                                                                                                        '').replace(
-        '   ', ' ')
+    e = section.replace(']\n', '], ').replace(',\n', ', ').replace('\n', '').replace(',,', ',')
+        #.replace('  ','').replace('   ', ' ')
+
+    # remove space at the beginning of line
+    ddd = re.sub("^  ", "", e, flags=re.M)
 
     # remove [redump.org]
-    dd = re.sub(' \[[^\]]+\]', '', e)
+    dd = re.sub(' \[[^\]]+\]', '', ddd)
     d = re.sub('\[[^\]]+\]', '', dd)
 
     # remove last ', '
