@@ -67,9 +67,10 @@ def print_softlist_command(escaped_list):
 def print_music(escaped_list, desc_list):
     index = 0
     for e in escaped_list:
+        filename = desc_list[index].replace('/','\\')
         print(
             "./randomame.py --music --allow_not_supported --description=\"" + e +
-            "\" --timeout=120 --window=1 --linear --quit --start_command=\"./start_script.sh\" --end_command=\"./end_script.sh \'" + desc_list[index] + "\'\" /media/4To/emu/mame/mame/mame\n")
+            "\" --timeout=120 --window=1 --linear --quit --start_command=\"./start_script.sh\" --end_command=\"./end_script.sh \'" + filename + "\'\" /media/4To/emu/mame/mame/mame\n")
         index = index + 1
 
 
