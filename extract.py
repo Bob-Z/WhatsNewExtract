@@ -21,7 +21,36 @@ def get_section(page, section):
     return d
 
 
-def get_description(section):
+def get_description_generic(section):
+    # Remove any number of space at beginning of line
+    d = re.sub("^ *", "", section, flags=re.M)
+
+    # replace all new line not preceeded by ']' by a space
+    dd = re.sub(r'(?<!\])\n', ' ', d)
+
+    # Every line should be "complete name [xxxx]"
+
+    # remove [redump.org]
+    d = re.sub(' \[[^\]]+\]', '', dd)
+
+    # Every line should be "complete name"
+
+    desc_list = re.split(r'\n', d)
+    # split with ", " ignoring ',' placed in parenthesis
+    #desc_list = re.split(r', (?!(?:[^(]*\([^)]*\))*[^()]*\))', d)
+
+    escaped_list = []
+    for d in desc_list:
+        # escape for regex
+        regex_escaped = re.escape(d)
+        # escpae for bach
+        e = regex_escaped.replace('!', '\!')
+        escaped_list.append(e.replace('"', '\\\"'))
+
+    print("\n\nFound", str(len(desc_list)), "entries")
+    return escaped_list, desc_list
+
+def get_description_softlist(section):
     # remove space at the beginning of line
     ddd = re.sub("^  ", "", section, flags=re.M)
 
@@ -48,7 +77,7 @@ def get_description(section):
         e = regex_escaped.replace('!', '\!')
         escaped_list.append(e.replace('"', '\\\"'))
 
-    print("Found", str(len(desc_list)), "entry")
+    print("\nFound", str(len(desc_list)), "entries\n")
     return escaped_list, desc_list
 
 
@@ -84,7 +113,7 @@ page = unicodedata.normalize("NFKD", p)
 for section in generic_section:
     section_page = get_section(page, section)
     if section_page is not None:
-        escaped_list, desc_list = get_description(section_page)
+        escaped_list, desc_list = get_description_generic(section_page)
         print(section)
         print_generic_command(escaped_list)
 
@@ -106,7 +135,7 @@ for section in softlist_section:
             softlist_name = softlist[1].replace(': ', '').replace(':\n', '')
             print("\n" + softlist_name)
 
-            escaped_list, desc_list = get_description(softlist[2])
+            escaped_list, desc_list = get_description_softlist(softlist[2])
 
             if softlist_name == "vgmplay":
                 print_music(escaped_list, desc_list)
