@@ -83,13 +83,13 @@ def get_description_softlist(section):
 
 def print_generic_command(title, escaped_list):
     print(
-        "./randomame.py --title_text=\"     MAME  " + version + "     :::" + title + "\" --title_bg=\"/media/4To/emu/mame/mame.png\" --description=\"" + ":::".join(
+        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + title + " \" --title_bg=\"/media/4To/emu/mame/mame.png\" --description=\"" + ":::".join(
             escaped_list) + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame")
 
 
 def print_softlist_command(title, softlist_name, escaped_list):
     print(
-        "./randomame.py --title_text=\"     MAME  " + version + "     :::" + title + ":::" + softlist_name + "\" --title_bg=\"/media/4To/emu/mame/mame.png\" --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + ":::".join(
+        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + title + " ::: " + softlist_name + " \" --title_bg=\"/media/4To/emu/mame/mame.png\" --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + ":::".join(
             escaped_list) + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame")
 
 
@@ -131,7 +131,7 @@ for section in softlist_section:
 
     section_page = get_section(page, section)
     if section_page is not None:
-        s = re.split("(\n[a-z])", section_page)
+        s = re.split("(\n[a-z0-9])", section_page)
         softlist_section = []
         for i in range(1, len(s), 2):
             softlist_section.append(s[i].replace('\n', '') + s[i + 1])
