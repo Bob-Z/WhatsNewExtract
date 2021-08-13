@@ -83,20 +83,23 @@ def get_description_softlist(section):
 
 def print_generic_command(title, escaped_list):
     print(
-        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + title + " \" --title_bg=\"/media/4To/emu/mame/mame.png\" --description=\"" + ":::".join(
+        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + title + " :::                       " + str(
+            len(escaped_list)) + " software                       \" --title_bg=\"/media/4To/emu/mame/mame.png\" --description=\"" + ":::".join(
             escaped_list) + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame")
 
 
 def print_softlist_command(title, softlist_name, escaped_list):
     print(
-        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + title + " ::: " + softlist_name + " \" --title_bg=\"/media/4To/emu/mame/mame.png\" --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + ":::".join(
+        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + softlist_name + " ::: " + title + " :::                       " + str(
+            len(escaped_list)) + " software                       \" --title_bg=\"/media/4To/emu/mame/mame.png\" --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + ":::".join(
             escaped_list) + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame")
 
 
 def print_music(escaped_list, desc_list):
     index = 0
     for e in escaped_list:
-        filename = desc_list[index].replace('/', '\\')
+        f = desc_list[index].replace('/', '\\')
+        filename = f.replace('\'', '\\\'')
         print(
             "./randomame.py --music --allow_not_supported --description=\"" + e +
             "\" --timeout=120 --window=1 --linear --quit --start_command=\"./start_script.sh\" --end_command=\"./end_script.sh \'" + filename + "\'\" /media/4To/emu/mame/mame/mame\n")
