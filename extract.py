@@ -23,7 +23,7 @@ def get_section(page, section):
 
 def get_description_generic(section):
     # Remove any number of space at beginning of line
-    d = re.sub("^ *", "", section, flags=re.M)
+    d = re.sub("^ *", "", section, flags=re.M | re.UNICODE)
 
     # replace all new line not preceded by ']' by a space
     dd = re.sub(r'(?<!\])\n', ' ', d)
@@ -85,14 +85,14 @@ def print_generic_command(title, escaped_list):
     print(
         "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + title + " :::                       " + str(
             len(escaped_list)) + " software                       \" --title_bg=\"/media/4To/emu/mame/mame.png\" --description=\"" + ":::".join(
-            escaped_list) + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search /media/4To/emu/mame/mame/mame")
+            escaped_list) + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search mame")
 
 
 def print_softlist_command(title, softlist_name, escaped_list):
     print(
         "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + softlist_name + " ::: " + title + " :::                       " + str(
             len(escaped_list)) + " software                       \" --title_bg=\"/media/4To/emu/mame/mame.png\" --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + ":::".join(
-            escaped_list) + "\" --timeout=60000 --window=1 --linear --quit /media/4To/emu/mame/mame/mame")
+            escaped_list) + "\" --timeout=60000 --window=1 --linear --quit mame")
 
 
 def print_music(escaped_list, desc_list):
@@ -102,7 +102,7 @@ def print_music(escaped_list, desc_list):
         filename = f.replace('\"', '\\\"')
         print(
             "./randomame.py --music --allow_not_supported --description=\"" + e +
-            "\" --timeout=120 --window=1 --linear --quit --start_command=\"./start_script.sh\" --end_command=\"./end_script.sh \\\"" + filename + "\\\"\" /media/4To/emu/mame/mame/mame\n")
+            "\" --timeout=120 --window=1 --linear --quit --start_command=\"./start_script.sh\" --final_command=\"./final_script.sh \\\"" + filename + "\\\"\" mame\n")
         index = index + 1
 
 
