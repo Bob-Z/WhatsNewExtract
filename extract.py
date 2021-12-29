@@ -108,7 +108,9 @@ def print_music(escaped_list, desc_list):
 
 generic_section = ["\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
                    "\nMachines promoted to working\n----------------------------\n",
-                   "\nClones promoted to working\n--------------------------\n"]
+                   "\nClones promoted to working\n--------------------------\n",
+                   "\nNew machines marked as NOT_WORKING\n----------------------------------\n",
+                   "\nNew clones marked as NOT_WORKING\n--------------------------------\n"]
 
 p = get_whats_new_page(sys.argv[1]).decode("utf-8")
 page = unicodedata.normalize("NFKD", p)
