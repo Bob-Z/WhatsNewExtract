@@ -117,7 +117,8 @@ def print_generic_command(title, escaped_list):
     print(
         "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + title + " :::                       " + str(
             len(escaped_list)) + " software                       \" --title_bg=\"/media/4To/emu/mame/mame.png\" --description=\"" + ":::".join(
-            escaped_list) + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search mame")
+            escaped_list) + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search " +
+        sys.argv[2] + " mame")
 
 
 def print_softlist_command(title, softlist_name, escaped_list):
@@ -135,7 +136,7 @@ def print_softlist_command(title, softlist_name, escaped_list):
         "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + long_name + " ::: " + title + " :::                       " + str(
             len(escaped_list)) + " software                       \" --title_bg=\"/media/4To/emu/mame/mame.png\" --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + ":::".join(
             escaped_list) + "\" --timeout=60000 --window=1 --linear --quit --loose_search " +
-        extra_command + " mame")
+        extra_command + " " + sys.argv[2] + " mame")
 
 
 def print_music(escaped_list, desc_list):
