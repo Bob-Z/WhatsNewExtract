@@ -4,6 +4,38 @@ import re
 import sys
 import unicodedata
 import urllib.request
+import xml.etree.ElementTree as ElementTree
+import subprocess
+
+soft_list_extra_command = {
+    "32x": "--force_driver=32x -snapsize 320x224",
+    "a800_flop": "--force_driver=a800",
+    "apple2_flop_clcracked": "--force_driver=apple2e",
+    "apple2_flop_orig": "--force_driver=apple2e",
+    "apple2gs_flop_orig": "--force_driver=apple2gs",
+    "c64_cass": "--force_driver=c64",
+    "cdi": "--force_driver=cdimono1",
+    "cpc_cass": "--force_driver=cpc6128 -snapsize 704x288",  # -snapsize 704x432 ?
+    "cpc_flop": "--force_driver=cpc6128 -snapsize 704x288",
+    "fmtowns_cd": "--force_driver=fmtowns --allow_preliminary -snapsize 768x512",
+    "fmtowns_flop_orig": "--force_driver=fmtowns --allow_preliminary -snapsize 768x512",
+    "gameboy": "--force_driver=gameboy",
+    "gba": "--force_driver=gba",
+    "gbcolor": "--force_driver=gbcolor",
+    "ibm5150": "--force_driver=ct486",
+    "ibm5170": "--force_driver=ct486",
+    "ibm5170_cdrom": "--force_driver=ct486",
+    "lynx": "--force_driver=lynx",
+    "megadriv": "--force_driver=megadriv --extra=\"-snapsize 320x224 -artpath /\"",
+    "nes": "--force_driver=nes --extra=\"-artpath /\"",
+    "ngpc": "--force_driver=ngpc --extra=\"-snapsize 904x568\"",
+    "pc98": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M\" --allow_preliminary",
+    "rx78_cart": "--allow_preliminary",
+    "sms": "--force_driver=sms --extra=\"-artpath /\"",
+    "snes": "--force_driver=snes",
+}
+
+softlist_xml = None
 
 
 def get_whats_new_page(version):
@@ -89,10 +121,21 @@ def print_generic_command(title, escaped_list):
 
 
 def print_softlist_command(title, softlist_name, escaped_list):
+    global softlist_xml
+    for list in softlist_xml:
+        if list.attrib['name'] == softlist_name:
+            long_name = list.attrib['description']
+
+    if softlist_name in soft_list_extra_command:
+        extra_command = soft_list_extra_command[softlist_name]
+    else:
+        extra_command = ""
+
     print(
-        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + softlist_name + " ::: " + title + " :::                       " + str(
+        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + long_name + " ::: " + title + " :::                       " + str(
             len(escaped_list)) + " software                       \" --title_bg=\"/media/4To/emu/mame/mame.png\" --selected_softlist=" + softlist_name + " --allow_not_supported --description=\"" + ":::".join(
-            escaped_list) + "\" --timeout=60000 --window=1 --linear --quit mame")
+            escaped_list) + "\" --timeout=60000 --window=1 --linear --quit --loose_search " +
+        extra_command + " mame")
 
 
 def print_music(escaped_list, desc_list):
@@ -106,6 +149,30 @@ def print_music(escaped_list, desc_list):
         index = index + 1
 
 
+def get_version():
+    args = ["mame"]
+    args += ['-version']
+
+    out = subprocess.run(args, capture_output=True)
+    return out.stdout.decode('utf-8')
+
+
+def get_softlist_file_name():
+    mame_version = get_version()
+    print("MAME verion:", mame_version)
+    return "/tmp/" + "softlist_" + mame_version + ".txt"
+
+
+def parse_soft_list():
+    print("Parsing software list XML")
+    tree = ElementTree.parse(get_softlist_file_name())
+    print("")
+    print("")
+
+    global softlist_xml
+    softlist_xml = tree.getroot()
+
+
 generic_section = ["\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
                    "\nMachines promoted to working\n----------------------------\n",
                    "\nClones promoted to working\n--------------------------\n",
@@ -116,6 +183,8 @@ p = get_whats_new_page(sys.argv[1]).decode("utf-8")
 page = unicodedata.normalize("NFKD", p)
 
 version = page[2] + page[3] + page[4]
+
+parse_soft_list()
 
 for section in generic_section:
     section_page = get_section(page, section)
