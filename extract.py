@@ -9,15 +9,21 @@ import subprocess
 
 soft_list_extra_command = {
     "32x": "--force_driver=32x --extra=\"-artpath / -snapsize 320x224\"",
+    "a800": "--force_driver=a800 --extra=\"-artpath /\"",
     "a800_flop": "--force_driver=a800 --extra=\"-artpath /\"",
+    "amigaaga_flop": "--force_driver=a1200 --extra=\"-artpath /\"",
+    "amigaecs_flop": "--force_driver=a600 --extra=\"-artpath /\"",
+    "amigaocs_flop": "--force_driver=a500 --extra=\"-artpath /\"",
     "apple2_flop_clcracked": "--force_driver=apple2e --extra=\"-artpath /\"",
     "apple2_flop_orig": "--force_driver=apple2e --extra=\"-artpath /\"",
     "apple2gs_flop_orig": "--force_driver=apple2gs --extra=\"-artpath /\"",
+    "apple2gs_flop_clcracked": "--force_driver=apple2gs --extra=\"-artpath /\"",
     "c64_cass": "--force_driver=c64 --extra=\"-artpath /\"",
     "cdi": "--force_driver=cdimono1 --extra=\"-artpath /\"",
     "cgenie_cass": "--force_driver=cgenie --extra=\"-artpath / -snapsize 768x512\"",
     "cpc_cass": "--force_driver=cpc6128 --extra=\"-artpath / -snapsize 704x288\"",  # -snapsize 704x432 ?
     "cpc_flop": "--force_driver=cpc6128 --extra=\"-artpath / -snapsize 704x288\"",
+    "famibox": "--force_driver=nes --extra=\"-artpath /\"",
     "fmtowns_cd": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "fmtowns_flop_orig": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "gameboy": "--force_driver=gameboy",
@@ -30,7 +36,9 @@ soft_list_extra_command = {
     "megadriv": "--force_driver=megadriv --extra=\"-snapsize 320x224 -artpath /\"",
     "nes": "--force_driver=nes --extra=\"-artpath /\"",
     "ngpc": "--force_driver=ngpc --extra=\"-snapsize 904x568\"",
+    "pc8801_flop": "--force_driver=pc8801 --extra=\"-artpath /\"",
     "pc98": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
+    "pc98_cd": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
     "rx78_cart": "--allow_preliminary --extra=\"-artpath /\"",
     "sms": "--force_driver=sms --extra=\"-artpath /\"",
     "snes": "--force_driver=snes --extra=\"-artpath /\"",
@@ -117,7 +125,7 @@ def get_description_softlist(section):
 
 def print_generic_command(title, escaped_list):
     print(
-        "./randomame.py --title_text=\"     MAME  " + version + "     ::: " + title + " :::                       " + str(
+        "./randomame.py --title_text=\"     MAME " + version + "      ::: " + title + " :::                       " + str(
             len(escaped_list)) + " software                       \" --title_bg=\"/media/4To/emu/mame/mame.png\" --description=\"" + ":::".join(
             escaped_list) + "\" --all --allow_preliminary --timeout=60000 --window=1 --linear --quit --loose_search " +
         sys.argv[2] + " mame")
@@ -183,7 +191,10 @@ generic_section = ["\nNew working machines\n--------------------\n", "\nNew work
                    "\nNew clones marked as NOT_WORKING\n--------------------------------\n"]
 
 p = get_whats_new_page(sys.argv[1]).decode("utf-8")
-page = unicodedata.normalize("NFKD", p)
+#page = unicodedata.normalize("NFKD", p)
+#page = unicodedata.normalize("NFC", p)
+#page = unicodedata.normalize("NFD", p)
+page = unicodedata.normalize("NFKC", p)
 
 version = page[2] + page[3] + page[4]
 
