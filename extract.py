@@ -9,6 +9,8 @@ import subprocess
 
 soft_list_extra_command = {
     "32x": "--force_driver=32x --extra=\"-artpath / -snapsize 320x224\"",
+    "a2600": "--force_driver=a2600 --extra=\"-artpath /\"",
+    "a7800": "--force_driver=a7800 --extra=\"-artpath /\"",
     "a800": "--force_driver=a800 --extra=\"-artpath /\"",
     "a800_flop": "--force_driver=a800 --extra=\"-artpath /\"",
     "amigaaga_flop": "--force_driver=a1200 --extra=\"-artpath /\"",
@@ -27,6 +29,7 @@ soft_list_extra_command = {
     "fmtowns_cd": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "fmtowns_flop_orig": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "gameboy": "--force_driver=gameboy",
+    "gamecom": "--force_driver=gamecom",
     "gba": "--force_driver=gba",
     "gbcolor": "--force_driver=gbcolor",
     "ibm5150": "--force_driver=ct486 --extra=\"-artpath /\"",
@@ -34,6 +37,9 @@ soft_list_extra_command = {
     "ibm5170_cdrom": "--force_driver=ct486 --extra=\"-artpath /\"",
     "lynx": "--force_driver=lynx",
     "megadriv": "--force_driver=megadriv --extra=\"-snapsize 320x224 -artpath /\"",
+    "monon_color": "--force_driver=mononcol --extra=\"-artpath /\"",
+    "msx1_cass": "--force_driver=mlf80 --extra=\"-artpath /\"",
+    "n64": "--force_driver=n64",
     "nes": "--force_driver=nes --extra=\"-artpath /\"",
     "ngpc": "--force_driver=ngpc --extra=\"-snapsize 904x568\"",
     "pc8801_flop": "--force_driver=pc8801 --extra=\"-artpath /\"",
@@ -43,6 +49,8 @@ soft_list_extra_command = {
     "sms": "--force_driver=sms --extra=\"-artpath /\"",
     "snes": "--force_driver=snes --extra=\"-artpath /\"",
     "spectrum_cass": "--force_driver=spectrum --extra=\"-artpath /\"",
+    "specpls3_flop": "--force_driver=sp3e8bit --extra=\"-artpath /\"",
+    "videopac": "--force_driver=odyssey2 --extra=\"-artpath /\"",
 }
 
 softlist_xml = None
@@ -63,6 +71,50 @@ def get_section(page, section):
     return d
 
 
+def get_bugs(page):
+    result = []
+    line = re.split(r'\n', page)
+    for l in line:
+        result_line = {}
+        line_split = re.split(r': ', l)
+
+        # Extract bug ID
+        result_line["bug"] = line_split[0][2:]
+
+        # Extract type of bug and driver
+        type_and_driver = re.split(r'] ', line_split[1])
+        result_line["type"] = type_and_driver[0][1:]
+        result_line["driver"] = type_and_driver[1].replace(') ', ' - ').replace('(', '')
+
+        # Extract comment
+        result_line["comment"] = line_split[2]
+
+        result.append(result_line)
+
+    return result
+
+
+def print_bug(result):
+    index = 2
+    for r in result:
+        file_name = "{0:03}".format(index)
+        print(file_name)
+        print("https://mametesters.org/view.php?id=" + r["bug"] + "\n")
+
+        with open(file_name + ".srt", 'w') as f:
+            f.write("1\n")
+            f.write("00:00:00,000 --> 00:00:10,000\n")
+            f.write(r["comment"] + "\n")
+            f.write("<b>" + r["driver"] + "</b>\n")
+        with open(file_name + ".srt2", 'w') as f:
+            f.write("1\n")
+            f.write("00:00:00,000 --> 00:00:10,000\n")
+            f.write("<b>" + r["type"] + "</b>\n")
+
+
+        index = index + 2
+
+
 def get_description_generic(section):
     # Remove any number of space at beginning of line
     d = re.sub("^ *", "", section, flags=re.M | re.UNICODE)
@@ -78,14 +130,14 @@ def get_description_generic(section):
     # Every line should be "complete name"
 
     desc_list = re.split(r'\n', d)
-    # split with ", " ignoring ',' placed in parenthesis
+    # split with ", " ignoring ',' placed in parentheses
     # desc_list = re.split(r', (?!(?:[^(]*\([^)]*\))*[^()]*\))', d)
 
     escaped_list = []
     for d in desc_list:
         # escape for regex
         regex_escaped = re.escape(d)
-        # escpae for bash
+        # escape for bash
         e = regex_escaped.replace('!', '\!')
         escaped_list.append(e.replace('"', '\\\"'))
 
@@ -184,21 +236,22 @@ def parse_soft_list():
     softlist_xml = tree.getroot()
 
 
-generic_section = ["\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
-                   "\nMachines promoted to working\n----------------------------\n",
-                   "\nClones promoted to working\n--------------------------\n",
-                   "\nNew machines marked as NOT_WORKING\n----------------------------------\n",
-                   "\nNew clones marked as NOT_WORKING\n--------------------------------\n"]
-
 p = get_whats_new_page(sys.argv[1]).decode("utf-8")
-#page = unicodedata.normalize("NFKD", p)
-#page = unicodedata.normalize("NFC", p)
-#page = unicodedata.normalize("NFD", p)
+# page = unicodedata.normalize("NFKD", p)
+# page = unicodedata.normalize("NFC", p)
+# page = unicodedata.normalize("NFD", p)
 page = unicodedata.normalize("NFKC", p)
 
 version = page[2] + page[3] + page[4]
 
 parse_soft_list()
+
+generic_section = ["\nMAME Testers bugs fixed\n-----------------------\n",
+                   "\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
+                   "\nMachines promoted to working\n----------------------------\n",
+                   "\nClones promoted to working\n--------------------------\n",
+                   "\nNew machines marked as NOT_WORKING\n----------------------------------\n",
+                   "\nNew clones marked as NOT_WORKING\n--------------------------------\n"]
 
 for section in generic_section:
     section_page = get_section(page, section)
@@ -235,3 +288,16 @@ for section in softlist_section:
                 print_music(escaped_list, desc_list)
             else:
                 print_softlist_command(title, softlist_name, escaped_list)
+
+bug_section = ["\nMAME Testers bugs fixed\n-----------------------\n"]
+
+for section in bug_section:
+    section_page = get_section(page, section)
+    if section_page is not None:
+        result = get_bugs(section_page)
+        print_bug(result)
+    # if section_page is not None:
+    #    escaped_list, desc_list = get_description_generic(section_page)
+    #    print(section)
+    #    title = re.split("\n", section)
+    #    print_generic_command(title[1], escaped_list)
