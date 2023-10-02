@@ -16,18 +16,22 @@ soft_list_extra_command = {
     "amigaaga_flop": "--force_driver=a1200 --extra=\"-artpath /\"",
     "amigaecs_flop": "--force_driver=a600 --extra=\"-artpath /\"",
     "amigaocs_flop": "--force_driver=a500 --extra=\"-artpath /\"",
+    "amiga_workbench": "--force_driver=a400030n --extra=\"-artpath /\"",
     "apple2_flop_clcracked": "--force_driver=apple2e --extra=\"-artpath /\"",
+    "apple2_flop_misc": "--force_driver=apple2e --extra=\"-artpath /\"",
     "apple2_flop_orig": "--force_driver=apple2e --extra=\"-artpath /\"",
     "apple2gs_flop_orig": "--force_driver=apple2gs --extra=\"-artpath /\"",
     "apple2gs_flop_clcracked": "--force_driver=apple2gs --extra=\"-artpath /\"",
     "c64_cass": "--force_driver=c64 --extra=\"-artpath /\"",
     "cdi": "--force_driver=cdimono1 --extra=\"-artpath /\"",
     "cgenie_cass": "--force_driver=cgenie --extra=\"-artpath / -snapsize 768x512\"",
+    "coleco": "--force_driver=coleco --extra=\"-artpath / \"",
     "cpc_cass": "--force_driver=cpc6128 --extra=\"-artpath / -snapsize 704x288\"",  # -snapsize 704x432 ?
     "cpc_flop": "--force_driver=cpc6128 --extra=\"-artpath / -snapsize 704x288\"",
     "famibox": "--force_driver=nes --extra=\"-artpath /\"",
     "fmtowns_cd": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "fmtowns_flop_orig": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
+    "gamate": "--force_driver=gamate",
     "gameboy": "--force_driver=gameboy",
     "gamecom": "--force_driver=gamecom",
     "gba": "--force_driver=gba",
@@ -36,21 +40,38 @@ soft_list_extra_command = {
     "ibm5170": "--force_driver=ct486 --extra=\"-artpath /\"",
     "ibm5170_cdrom": "--force_driver=ct486 --extra=\"-artpath /\"",
     "lynx": "--force_driver=lynx",
+    "mac_flop_clcracked": "--force_driver=mac512k",
+    "mac_flop_orig": "--force_driver=mac512k",
     "megadriv": "--force_driver=megadriv --extra=\"-snapsize 320x224 -artpath /\"",
+    "megacdj": "--force_driver=megacdj --extra=\"-snapsize 320x224 -artpath /\"",
     "monon_color": "--force_driver=mononcol --extra=\"-artpath /\"",
     "msx1_cass": "--force_driver=mlf80 --extra=\"-artpath /\"",
+    "msx1_cart": "--force_driver=mlf80 --extra=\"-artpath /\"",
+    "msx1_flop": "--force_driver=hbf1xv --extra=\"-artpath /\"",
+    "msx1_flop_525": "--force_driver=\"mlf80 -cart1 mfd001\" --extra=\" -artpath /\"",
+    "msx1_softcard": "--force_driver=\"mlf80 -cartslot1 softcard\" --extra=\" -artpath /\"",
     "n64": "--force_driver=n64",
     "nes": "--force_driver=nes --extra=\"-artpath /\"",
     "ngpc": "--force_driver=ngpc --extra=\"-snapsize 904x568\"",
-    "pc8801_flop": "--force_driver=pc8801 --extra=\"-artpath /\"",
+    "oric1_cass": "--force_driver=oric1 ",
+    "pc8801_flop": "--force_driver=pc8801mk2sr --extra=\"-artpath /\"",
     "pc98": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
     "pc98_cd": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
+    "pda600": "--force_driver=pda600 --allow_preliminary",
+    "psion_ssd": "--force_driver=psion3a --allow_preliminary",
     "rx78_cart": "--allow_preliminary --extra=\"-artpath /\"",
+    "segacd": "--force_driver=segacd --extra=\"-snapsize 320x224 -artpath /\"",
     "sms": "--force_driver=sms --extra=\"-artpath /\"",
     "snes": "--force_driver=snes --extra=\"-artpath /\"",
     "spectrum_cass": "--force_driver=spectrum --extra=\"-artpath /\"",
     "specpls3_flop": "--force_driver=sp3e8bit --extra=\"-artpath /\"",
+    "spectrum_betadisc_flop": "--force_driver=pent1024 --extra=\"-artpath /\"",
+    "svision": "--force_driver=svision ",
+    "vic10": "--force_driver=c64 --extra=\"-artpath /\"",
+    "vidbrain": "--force_driver=vidbrain --extra=\"-artpath /\"",
     "videopac": "--force_driver=odyssey2 --extra=\"-artpath /\"",
+    "vsmile_cart": "--force_driver=vsmile --extra=\"-artpath /\"",
+    "x68k_flop": "--force_driver=x68000 --extra=\"-artpath /\"",
 }
 
 softlist_xml = None
@@ -87,7 +108,10 @@ def get_bugs(page):
         result_line["driver"] = type_and_driver[1].replace(') ', ' - ').replace('(', '')
 
         # Extract comment
-        result_line["comment"] = line_split[2]
+        if len(line_split) > 2:
+	        result_line["comment"] = line_split[2]
+        else:
+	        result_line["comment"] = ""
 
         result.append(result_line)
 
@@ -246,12 +270,12 @@ version = page[2] + page[3] + page[4]
 
 parse_soft_list()
 
-generic_section = ["\nMAME Testers bugs fixed\n-----------------------\n",
-                   "\nNew working machines\n--------------------\n", "\nNew working clones\n------------------\n",
-                   "\nMachines promoted to working\n----------------------------\n",
+generic_section = [
+                   "\nNew working systems\n-------------------\n", "\nNew working clones\n------------------\n",
+                   "\nSystems promoted to working\n---------------------------\n",
                    "\nClones promoted to working\n--------------------------\n",
-                   "\nNew machines marked as NOT_WORKING\n----------------------------------\n",
-                   "\nNew clones marked as NOT_WORKING\n--------------------------------\n"]
+                   "\nNew systems marked not working\n------------------------------\n",
+                   "\nNew clones marked not working\n-----------------------------\n"]
 
 for section in generic_section:
     section_page = get_section(page, section)
@@ -261,7 +285,7 @@ for section in generic_section:
         title = re.split("\n", section)
         print_generic_command(title[1], escaped_list)
 
-softlist_section = ["\nNew working software list additions\n-----------------------------------",
+softlist_section = ["\nNew working software list items\n-------------------------------",
                     "\nSoftware list items promoted to working\n---------------------------------------"]
 
 for section in softlist_section:
