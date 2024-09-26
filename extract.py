@@ -22,21 +22,31 @@ soft_list_extra_command = {
     "apple2_flop_orig": "--force_driver=apple2e --extra=\"-artpath /\"",
     "apple2gs_flop_orig": "--force_driver=apple2gs --extra=\"-artpath /\"",
     "apple2gs_flop_clcracked": "--force_driver=apple2gs --extra=\"-artpath /\"",
+    "bbc_rom": "--force_driver=bbcb --extra=\"-artpath /\"",
     "c64_cass": "--force_driver=c64 --extra=\"-artpath /\"",
+    "c64_cart": "--force_driver=c64 --extra=\"-artpath /\"",
     "casloopy": "--force_driver=casloopy --extra=\"-artpath /\"",
     "cdi": "--force_driver=cdimono1 --extra=\"-artpath /\"",
     "cgenie_cass": "--force_driver=cgenie --extra=\"-artpath / -snapsize 768x512\"",
     "coleco": "--force_driver=coleco --extra=\"-artpath / \"",
+    "coleco_homebrew": "--force_driver=coleco --extra=\"-artpath / \"",
     "cpc_cass": "--force_driver=cpc6128 --extra=\"-artpath / -snapsize 704x288\"",  # -snapsize 704x432 ?
     "cpc_flop": "--force_driver=cpc6128 --extra=\"-artpath / -snapsize 704x288\"",
+    "ctvboy": "--force_driver=ctvboy --extra=\"-artpath /\"",
+    "ekara_cart": "--force_driver=ekara --extra=\"-artpath /\"",
+    "ekara_japan": "--force_driver=epitch --extra=\"-artpath /\"",
     "famibox": "--force_driver=nes --extra=\"-artpath /\"",
     "fmtowns_cd": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "fmtowns_flop_orig": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "gamate": "--force_driver=gamate",
     "gameboy": "--force_driver=gameboy",
     "gamecom": "--force_driver=gamecom",
+    "gameking": "--force_driver=gameking",
+    "gameking3": "--force_driver=gamekin3",
     "gba": "--force_driver=gba",
     "gbcolor": "--force_driver=gbcolor",
+    "gx4000": "--force_driver=gx4000 --extra=\"-artpath / -snapsize 704x288\"",
+    "hp98x6_rom": "--force_driver=hp9816a --extra=\"-ramsize 1M \"",
     "ibm5150": "--force_driver=ct486 --extra=\"-artpath /\"",
     "ibm5170": "--force_driver=ct486 --extra=\"-artpath /\"",
     "ibm5170_cdrom": "--force_driver=ct486 --extra=\"-artpath /\"",
@@ -52,7 +62,9 @@ soft_list_extra_command = {
     "msx1_flop_525": "--force_driver=\"mlf80 -cart1 mfd001\" --extra=\" -artpath /\"",
     "msx1_softcard": "--force_driver=\"mlf80 -cartslot1 softcard\" --extra=\" -artpath /\"",
     "msx2_cart": "--force_driver=fsa1fx --extra=\"-artpath /\"",
+    "msx2_flop": "--force_driver=hbf700p --extra=\"-artpath /\"",
     "n64": "--force_driver=n64",
+    "neogeo": "--force_driver=neogeo --extra=\"-artpath /\"",
     "nes": "--force_driver=nes --extra=\"-artpath /\"",
     "ngpc": "--force_driver=ngpc --extra=\"-snapsize 904x568\"",
     "oric1_cass": "--force_driver=oric1 ",
@@ -65,10 +77,11 @@ soft_list_extra_command = {
     "rx78_cart": "--force_driver=rx78 --allow_preliminary --extra=\"-artpath /\"",
     "samcoupe_flop": "--force_driver=samcoupe",
     "sega_beena_cart": "--force_driver=beena",
+    "segaai": "--force_driver=segaai --extra=\"-artpath /\"",
     "segacd": "--force_driver=segacd --extra=\"-snapsize 320x224 -artpath /\"",
     "sms": "--force_driver=sms --extra=\"-artpath /\"",
     "snes": "--force_driver=snes --extra=\"-artpath /\"",
-    "spectrum_cass": "--force_driver=spectrum --extra=\"-artpath /\"",
+    "spectrum_cass": "--force_driver=spec128 --extra=\"-artpath /\"",
     "specpls3_flop": "--force_driver=sp3e8bit --extra=\"-artpath /\"",
     "spectrum_betadisc_flop": "--force_driver=pent1024 --extra=\"-artpath /\"",
     "svision": "--force_driver=svision ",
@@ -115,9 +128,9 @@ def get_bugs(page):
 
         # Extract comment
         if len(line_split) > 2:
-	        result_line["comment"] = line_split[2]
+            result_line["comment"] = line_split[2]
         else:
-	        result_line["comment"] = ""
+            result_line["comment"] = ""
 
         result.append(result_line)
 
@@ -141,7 +154,6 @@ def print_bug(result):
             f.write("00:00:00,000 --> 00:00:10,000\n")
             f.write("<b>" + r["type"] + "</b>\n")
 
-
         index = index + 2
 
 
@@ -155,7 +167,7 @@ def get_description_generic(section):
     # Every line should be "complete name [xxxx]"
 
     # remove [redump.org]
-    d = re.sub(' \[[^\]]+\]', '', dd)
+    d = re.sub(r' \[[^\]]+\]', '', dd)
 
     # Every line should be "complete name"
 
@@ -168,8 +180,8 @@ def get_description_generic(section):
         # escape for regex
         regex_escaped = re.escape(d)
         # escape for bash
-        e = regex_escaped.replace('!', '\!')
-        escaped_list.append(e.replace('"', '\\\"'))
+        e = regex_escaped.replace('!', r'\!')
+        escaped_list.append(e.replace(r'"', '\\\"'))
 
     print("\n\nFound", str(len(desc_list)), "entries")
     return escaped_list, desc_list
@@ -183,8 +195,8 @@ def get_description_softlist(section):
     # .replace('  ','').replace('   ', ' ')
 
     # remove [redump.org]
-    dd = re.sub(' \[[^\]]+\]', '', e)
-    d = re.sub('\[[^\]]+\]', '', dd)
+    dd = re.sub(r' \[[^\]]+\]', '', e)
+    d = re.sub(r'\[[^\]]+\]', '', dd)
 
     # remove last ', '
     # c = desc_list = d[:-2]
@@ -198,7 +210,7 @@ def get_description_softlist(section):
         # escape for regex
         regex_escaped = re.escape(d)
         # escape for bash
-        e = regex_escaped.replace('!', '\!')
+        e = regex_escaped.replace('!', r'\!')
         escaped_list.append(e.replace('"', '\\\"'))
 
     print("\nFound", str(len(desc_list)), "entries\n")
@@ -215,9 +227,20 @@ def print_generic_command(title, escaped_list):
 
 def print_softlist_command(title, softlist_name, escaped_list):
     global softlist_xml
+
+    long_name = None
+
     for list in softlist_xml:
         if list.attrib['name'] == softlist_name:
             long_name = list.attrib['description']
+
+    if long_name is None:
+        print("**************************************")
+        print("**************************************")
+        print("Can't find", softlist_name, "softlist")
+        print("**************************************")
+        print("**************************************")
+        return
 
     if softlist_name in soft_list_extra_command:
         extra_command = soft_list_extra_command[softlist_name]
@@ -277,11 +300,11 @@ version = page[2] + page[3] + page[4]
 parse_soft_list()
 
 generic_section = [
-                   "\nNew working systems\n-------------------\n", "\nNew working clones\n------------------\n",
-                   "\nSystems promoted to working\n---------------------------\n",
-                   "\nClones promoted to working\n--------------------------\n",
-                   "\nNew systems marked not working\n------------------------------\n",
-                   "\nNew clones marked not working\n-----------------------------\n"]
+    "\nNew working systems\n-------------------\n", "\nNew working clones\n------------------\n",
+    "\nSystems promoted to working\n---------------------------\n",
+    "\nClones promoted to working\n--------------------------\n",
+    "\nNew systems marked not working\n------------------------------\n",
+    "\nNew clones marked not working\n-----------------------------\n"]
 
 for section in generic_section:
     section_page = get_section(page, section)
