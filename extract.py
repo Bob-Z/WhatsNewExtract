@@ -36,6 +36,7 @@ soft_list_extra_command = {
     "ekara_cart": "--force_driver=ekara --extra=\"-artpath /\"",
     "ekara_japan": "--force_driver=epitch --extra=\"-artpath /\"",
     "famibox": "--force_driver=nes --extra=\"-artpath /\"",
+    "famicom_flop": "--force_driver=fds --extra=\"-artpath /\"",
     "fmtowns_cd": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "fmtowns_flop_orig": "--force_driver=fmtowns --allow_preliminary --extra=\"-artpath / -snapsize 768x512\"",
     "gamate": "--force_driver=gamate",
@@ -51,10 +52,12 @@ soft_list_extra_command = {
     "ibm5170": "--force_driver=ct486 --extra=\"-artpath /\"",
     "ibm5170_cdrom": "--force_driver=ct486 --extra=\"-artpath /\"",
     "lynx": "--force_driver=lynx",
+    "mac_cdrom": "--force_driver=macqd800 --extra=\"-hard mac761 -ramsize 16M -video opengl\"",
     "mac_flop_clcracked": "--force_driver=mac512k",
     "mac_flop_orig": "--force_driver=mac512k",
-    "megadriv": "--force_driver=megadriv --extra=\"-snapsize 320x224 -artpath /\"",
+    "megadriv": "--force_driver=megadriv --extra=\"-snapsize 320x224 -video opengl -artpath /\"",
     "megacdj": "--force_driver=megacdj --extra=\"-snapsize 320x224 -artpath /\"",
+    "mo5_cass": "--force_driver=mo5 --extra=\"-artpath /\"",
     "monon_color": "--force_driver=mononcol --extra=\"-artpath /\"",
     "msx1_cass": "--force_driver=mlf80 --extra=\"-artpath /\"",
     "msx1_cart": "--force_driver=mlf80 --extra=\"-artpath /\"",
@@ -68,14 +71,20 @@ soft_list_extra_command = {
     "nes": "--force_driver=nes --extra=\"-artpath /\"",
     "ngpc": "--force_driver=ngpc --extra=\"-snapsize 904x568\"",
     "oric1_cass": "--force_driver=oric1 ",
+    "pc6001_cart": "--force_driver=pc6001 ",
     "pc8801_flop": "--force_driver=pc8801mk2sr --extra=\"-artpath /\"",
     "pc98": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
     "pc98_cd": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
     "pda600": "--force_driver=pda600 --allow_preliminary",
     "psion_ssd": "--force_driver=psion3a --allow_preliminary",
+    "psx": "--force_driver=psj --allow_preliminary",
+    "pv1000": "--force_driver=pv1000 --allow_preliminary",
+    "pv2000": "--force_driver=pv2000 --allow_preliminary",
     "rx78_cass": "--force_driver=rx78 --allow_preliminary --extra=\"-artpath /\"",
     "rx78_cart": "--force_driver=rx78 --allow_preliminary --extra=\"-artpath /\"",
     "samcoupe_flop": "--force_driver=samcoupe",
+    "sc3000_cass": "--force_driver=sc3000 --extra=\"-cart basic3e\"",
+    "scv": "--force_driver=scv",
     "sega_beena_cart": "--force_driver=beena",
     "segaai": "--force_driver=segaai --extra=\"-artpath /\"",
     "segacd": "--force_driver=segacd --extra=\"-snapsize 320x224 -artpath /\"",
@@ -84,6 +93,7 @@ soft_list_extra_command = {
     "spectrum_cass": "--force_driver=spec128 --extra=\"-artpath /\"",
     "specpls3_flop": "--force_driver=sp3e8bit --extra=\"-artpath /\"",
     "spectrum_betadisc_flop": "--force_driver=pent1024 --extra=\"-artpath /\"",
+    "supracan": "--force_driver=supracan ",
     "svision": "--force_driver=svision ",
     "vic10": "--force_driver=c64 --extra=\"-artpath /\"",
     "vidbrain": "--force_driver=vidbrain --extra=\"-artpath /\"",
@@ -91,6 +101,7 @@ soft_list_extra_command = {
     "videopac": "--force_driver=odyssey2 --extra=\"-artpath /\"",
     "vsmile_cart": "--force_driver=vsmile --extra=\"-artpath /\"",
     "x68k_flop": "--force_driver=x68000 --extra=\"-artpath /\"",
+    "zx81_cass": "--force_driver=zx81 --extra=\"-artpath /\"",
 }
 
 softlist_xml = None
@@ -181,7 +192,8 @@ def get_description_generic(section):
         regex_escaped = re.escape(d)
         # escape for bash
         e = regex_escaped.replace('!', r'\!')
-        escaped_list.append(e.replace(r'"', '\\\"'))
+        f = e.replace("'", r"\'")
+        escaped_list.append(f.replace(r'"', '\\\"'))
 
     print("\n\nFound", str(len(desc_list)), "entries")
     return escaped_list, desc_list
@@ -211,7 +223,8 @@ def get_description_softlist(section):
         regex_escaped = re.escape(d)
         # escape for bash
         e = regex_escaped.replace('!', r'\!')
-        escaped_list.append(e.replace('"', '\\\"'))
+        f = e.replace("'", r"\'")
+        escaped_list.append(f.replace('"', '\\\"'))
 
     print("\nFound", str(len(desc_list)), "entries\n")
     return escaped_list, desc_list
