@@ -51,6 +51,7 @@ soft_list_extra_command = {
     "ibm5150": "--force_driver=ct486 --extra=\"-artpath /\"",
     "ibm5170": "--force_driver=ct486 --extra=\"-artpath /\"",
     "ibm5170_cdrom": "--force_driver=ct486 --extra=\"-artpath /\"",
+    "juicebox": "--force_driver=juicebox --extra=\"-artpath /\"",
     "lynx": "--force_driver=lynx",
     "mac_cdrom": "--force_driver=macqd800 --extra=\"-hard mac761 -ramsize 16M -video opengl\"",
     "mac_flop_clcracked": "--force_driver=mac512k",
@@ -66,6 +67,9 @@ soft_list_extra_command = {
     "msx1_softcard": "--force_driver=\"mlf80 -cartslot1 softcard\" --extra=\" -artpath /\"",
     "msx2_cart": "--force_driver=fsa1fx --extra=\"-artpath /\"",
     "msx2_flop": "--force_driver=hbf700p --extra=\"-artpath /\"",
+    "mz2000_cass": "--force_driver=mz2000 --extra=\"-artpath /\"",
+    "mz2500_flop": "--force_driver=mz2500 --extra=\"-artpath /\"",
+    "mz80b_flop": "--force_driver=mz80b --extra=\"-artpath /\"",
     "n64": "--force_driver=n64",
     "neogeo": "--force_driver=neogeo --extra=\"-artpath /\"",
     "nes": "--force_driver=nes --extra=\"-artpath /\"",
@@ -73,8 +77,10 @@ soft_list_extra_command = {
     "oric1_cass": "--force_driver=oric1 ",
     "pc6001_cart": "--force_driver=pc6001 ",
     "pc8801_flop": "--force_driver=pc8801mk2sr --extra=\"-artpath /\"",
+    "pc88va": "--force_driver=pc88va2 --extra=\"-artpath /\"",
     "pc98": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
     "pc98_cd": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
+    "pc98_hdd": "--force_driver=pc9821ce2 --extra=\"-ramsize 14M -artpath /\" --allow_preliminary",
     "pda600": "--force_driver=pda600 --allow_preliminary",
     "psion_ssd": "--force_driver=psion3a --allow_preliminary",
     "psx": "--force_driver=psj --allow_preliminary",
@@ -83,6 +89,7 @@ soft_list_extra_command = {
     "rx78_cass": "--force_driver=rx78 --allow_preliminary --extra=\"-artpath /\"",
     "rx78_cart": "--force_driver=rx78 --allow_preliminary --extra=\"-artpath /\"",
     "samcoupe_flop": "--force_driver=samcoupe",
+    "saturn": "--force_driver=saturnjp --extra=\"-artpath /\"",
     "sc3000_cass": "--force_driver=sc3000 --extra=\"-cart basic3e\"",
     "scv": "--force_driver=scv",
     "sega_beena_cart": "--force_driver=beena",
@@ -201,7 +208,9 @@ def get_description_generic(section):
 
 def get_description_softlist(section):
     # remove space at the beginning of line
-    ddd = re.sub("^  ", "", section, flags=re.M)
+    dddd = re.sub("^  ", "", section, flags=re.M)
+    # FIXME, replace )) by ) but now output lacks a parenthesis
+    ddd = re.sub("\)\)", "\)", dddd, flags=re.M)
 
     e = ddd.replace(']\n', '], ').replace(',\n', ', ').replace('\n', '').replace(',,', ',')
     # .replace('  ','').replace('   ', ' ')
